@@ -1,0 +1,9 @@
+*.bak.*
+*.mp4
+*.mov
+*.wav
+*.jpg
+*.jpeg
+*.png
+.DS_Store
+__pycache__/
