@@ -25,3 +25,9 @@ See [the example](examples/text-image-workflow.md). The main instructions and pl
 This is an instruction package, not a video generation model or platform API integration. Media inspection tools come from the host environment. It does not guarantee pixel equality, precise cuts or lip sync. `test-prompts.json` contains manual regression scenarios, not evidence of automated or end-to-end generation tests. Do not redistribute private footage, images or conversations with the skill.
 
 Licensed under [MIT](LICENSE), copyright 2026 haibo0505.
+
+## Narration completeness
+
+When speech is present, reconstruction includes the full narration, including off-screen product explanations. Inspect the entire audio, transcribe and check the words, put concrete dialogue into copyable prompts, and check for omissions, duplicate readings and sentences cut at shot boundaries. Not uploading audio to the generation platform does not remove the narration requirement; a continuous voice-over can be recorded in post-production.
+
+If audio cannot be analyzed, disclose that narration analysis is incomplete and label any visual-only draft accordingly. Distinguish machine transcription, subtitle checks and actual listening; unverified voice qualities are suggestions, not observations. Explicit user requests for silent or visual-only output take precedence.
