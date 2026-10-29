@@ -7,3 +7,6 @@
 *.png
 .DS_Store
 __pycache__/
+.venv/
+.env
+config.json

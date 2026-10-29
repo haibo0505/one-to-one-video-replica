@@ -1,4 +1,4 @@
 interface:
   display_name: "1:1复刻视频"
-  short_description: "按镜头拆解并生成含口播声音的 Seedance 提示词"
-  default_prompt: "使用 $one-to-one-video-replica，按镜头拆解→Seedance提示词→首帧换镜→一致性锚点流程复刻视频，并把口播和声音写进每条提示词。"
+  short_description: "拆解视频为小云雀图文生成分镜，完整描述动作与对白，无需上传原片"
+  default_prompt: "使用 $one-to-one-video-replica 拆解视频，输出小云雀可直接使用的文字加图片生成提示词；视频只供分析，不上传平台，每条独立描述场景、人物、产品、动作、镜头和声音。"

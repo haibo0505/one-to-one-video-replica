@@ -1,23 +1,27 @@
-# 1:1 Video Replica Skill
+# Video Replica Skill
 
-A Codex skill for reconstructing **authorized** reference videos. It measures shots and timing, prepares direct Seedance prompts, supports physical reshoots, and compares a recreation with its reference.
+[中文](README.md) · [Skill instructions](SKILL.md)
 
-The goal is to reduce visible differences. Text prompts alone cannot guarantee pixel-level equality.
+A Codex skill that analyzes reference videos and compiles self-contained prompts for text-and-image video generation. The default workflow targets Xiaoyunque: **the video is analysis material for Codex, not an input to the generation platform.**
 
-## Install
+## What changed
 
-Copy this repository to your Codex skills directory so that `SKILL.md` is at `one-to-one-video-replica/SKILL.md`. On Windows:
-
-```powershell
-git clone https://github.com/haibo0505/one-to-one-video-replica.git
-New-Item -ItemType Directory -Force -Path (Join-Path $env:USERPROFILE '.codex\skills') | Out-Null
-Copy-Item -Recurse -Force -LiteralPath '.\one-to-one-video-replica' -Destination (Join-Path $env:USERPROFILE '.codex\skills\one-to-one-video-replica')
-```
+- Describe scenes, people, products, camera paths, dialogue and actions explicitly instead of asking the platform to “keep the original video.”
+- Track initial state, contact, release and final state across shots.
+- Distinguish image count from product count, and preserve the user's terminology for product measurements.
+- Do not assume source audio, extracted frames or reference videos will be uploaded.
+- Do not apply Seedance settings or claim unverified Xiaoyunque capabilities.
 
 ## Use
 
-Invoke `$one-to-one-video-replica` with your licensed reference video and any replacement product, person, or audio assets. State the target product count and colorways explicitly when they differ from the source video.
+Clone or download the repository and have Codex read `SKILL.md`. Keep `agents/` and `references/` alongside it. Register the complete directory with your Codex skill setup if desired; this repository has no automatic installer.
 
-The four routes are Seedance Direct, Reference Analysis, Reshoot Blueprint, and Difference Detection. See [README.md](README.md) and [SKILL.md](SKILL.md) for details.
+Ask Codex to analyze your authorized reference video and write prompts for text plus the images you actually intend to upload. Specify product changes, count and measurements. Request either independent shot prompts or one complete multi-shot prompt.
 
-Licensed under [MIT](LICENSE).
+See [the example](examples/text-image-workflow.md). The main instructions and playbook are in Chinese. Other workflows are available only when explicitly requested.
+
+## Limits
+
+This is an instruction package, not a video generation model or platform API integration. Media inspection tools come from the host environment. It does not guarantee pixel equality, precise cuts or lip sync. `test-prompts.json` contains manual regression scenarios, not evidence of automated or end-to-end generation tests. Do not redistribute private footage, images or conversations with the skill.
+
+Licensed under [MIT](LICENSE), copyright 2026 haibo0505.

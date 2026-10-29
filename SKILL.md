@@ -1,66 +1,65 @@
 ---
 name: one-to-one-video-replica
-description: Analyze authorized reference videos, build measurable reconstruction blueprints, compile direct Seedance 2.5 prompt packages, and compare recreations. Use for 1:1 video replication, Seedance prompts, frame-level reverse engineering, shot matching, and difference correction.
+description: 拆解参考视频并编写可独立使用的视频生成分镜提示词，默认用于小云雀文字加图片生成，原视频仅供分析，不上传生成平台。支持产品替换、动作与对白重建、实拍蓝图及版本差异检查。
 ---
 
-# 1:1 Video Reconstruction
+# 视频拆解与图文生成复刻
 
-Treat the authorized reference as the visual and temporal baseline. Reduce perceptible differences through measurement and correction.
+## 默认工作流与输入边界
 
-## Boundaries
+默认平台为小云雀，默认生成输入只有文字和用户准备上传的图片。参考视频是 Codex 的分析材料，不是生成平台的输入。即使用户说“复刻”“换鞋”“保持动作”，也先拆解视频，再用完整文字重建；不得自动选择视频编辑、视频参考、深度视频驱动或延长视频模式。只有用户明确要求将视频上传平台时才切换工作流。
 
-- Preserve the reference unless the user requests a change.
-- Label uncertain values as measured, estimated, inferred, or unknown. Never invent metadata, media labels, or model controls.
-- A prompt cannot guarantee pixel equality; references and edit mode control more than text.
-- Never submit paid or external generation without authorization.
+区分两类素材：
+- 分析材料：原视频、其音轨、历史聊天、帧级报告、未确认上传的截图。用于提取信息，不得在生成提示词中作为可调用输入。
+- 生成材料：用户实际要上传的图片及文字。只给实际图片分配人物、产品、场景或首帧角色。不要默认原视频首帧会被上传，不要虚构图片文件名、编号或平台槽位。
 
-## Route by requested deliverable
+只上传产品图时，人物、场景、动作、构图、声音必须通过文字完整定义；多角度产品图表示同一款产品，不表示多个产品。图片数量不等于成片物体数量。
 
-1. **Seedance Direct** — use the screenshot workflow: measure each shot, write fields, then a self-contained `Seedance提示词`.
-2. **Reference Analysis** — for 拆解、分析、测量、蓝图, or an engineering report.
-3. **Reshoot Blueprint** — for live-action reshooting or physical-set reconstruction.
-4. **Difference Detection** — when both reference and recreated versions are supplied.
+## 分析方法与证据
 
-For mixed requests, measure internally and return Seedance Direct output. Hide the engineering report unless requested.
+分析视频、实拍重建或版本比较时，完整阅读 [references/frame-reconstruction-playbook.md](references/frame-reconstruction-playbook.md)。该手册只指导内部测量；生成输入、输出格式、可见文字策略及本任务完成边界以本文件和用户当前要求为准。
 
-## Required playbook
+- 只对实际读取或观看的材料作结论。历史聊天中的描述不等于看过视频；静态图片不能证明完整动作或对白。
+- 按真实切点划分镜头，抽查动作开始、接触、峰值、结束及转场；不把均匀抽帧当作完整动作分析。
+- 未测得的时间、机位、焦段和细节标为估计、推断或未知；不要把猜测写成测量事实。
+- 用户指定的产品替换、人物变更和数值修改优先于分析视频中的旧内容。只更新相关内容，不附带更改剧情。
+- 未拿到视频时，可以依据已有报告改写，说明证据范围；不要编造逐帧检查结果或精确切点。
 
-For raw-video analysis, reshoot planning, or version comparison, read [references/frame-reconstruction-playbook.md](references/frame-reconstruction-playbook.md) completely. In Seedance Direct mode, use it internally; never dump frame tables into the prompt.
+## 编写可独立生成的镜头
 
-## Seedance Direct
+### 先确定连续性
 
-### Step 1 — Choose one request shape
+内部记录每镜头的初始状态 → 动作过程 → 最终状态，并检查下一镜头是否接得上。重点追踪人物位置、左右手、视线、道具数量、物体所在位置及拿放关系。
 
-- **Text generation:** no media; cannot achieve 1:1.
-- **Reference generation:** borrow action, camera, rhythm, layout, style, or timing.
-- **Shot-anchor workflow:** each shot gets source range, first-frame anchor, scene/composition/subject/microexpression/action/background/camera, then one prompt; next shots reuse anchors.
-- **Video edit:** retain the source timeline; change only named elements.
-- **Video extend:** continue forward or backward from the named source boundary.
+动作必须说明谁、用哪只手、从哪里拿、往哪里移动、何时接触、何时松手、最后在哪里。例如“女顾客拿鞋放柜台”应写成：开场柜台为空，女性手持一双靴子，双手向前将鞋放下，鞋底接触台面后松手，靴子留在柜台中央。不能改成开场柜台已有鞋。未知左右手时不要硬编。
 
-Do not ask when intent selects the shape. Split edit-then-extend into two prompts. Ask once only when ambiguity materially changes the request.
+锁定人物发型、服装、配饰和空间关系。跨镜头重复必要的身份描述；“同一个人”“上一镜头的鞋”不能代替具体外观。产品结构、颜色、材质遵从实际图片；营销数值按用户口径表达，例如“穿着总增高5.5厘米”不能擅自变成“外跟高5.5厘米”或“内增高5.5厘米”。修改对白数值时检查整套对白和产品描述，清除冲突旧值。
 
-### Step 2 — Map real inputs
+### 把分析结论编译为可见、可听内容
 
-Give each used input one narrow role; preserve exact labels and never coin them. In Seedance Direct, state the role in the relevant shot block or prompt. If a platform field/label or binding is unknown, mark `NOT READY` after the shot blocks and name the missing item.
+每条可复制提示词独立包含：场景与灯光、人物和产品、景别与构图、初始状态、连续动作、表情视线、运镜起终点、结束状态，以及必要的声音。只引用实际上传的图片，不依赖其他镜头的文字。
 
-### Step 3 — Compile, do not copy
+- 禁止以“保留原片”“保持原片”“沿用原视频”“与参考视频一致”“按照视频动作”“以源视频为底片”“仅替换旧鞋”“原声照旧”“原音乐延续”“上一段同款”等外部依赖代替描述。
+- “保持”可以用于本提示词已具体定义的状态，例如“镜头保持固定”；禁止的是指向不可见素材的依赖。
+- 不在可复制提示词中引用原视频文件名、原时间码、帧编号、坐标表、评分或工程检查步骤。分析时间码留在提示词外；镜头内部使用本段相对时间或清楚的先后顺序。
+- 摄像机描述要有起始景别、方向、速度感和结束构图。固定机位就明确写固定，不无故加入推拉或转场。
+- 分析到的对白写出具体内容、说话人、语气、停顿和配合动作；用户改写后以新版为准。听不清时在提示词外标注，别编造“原台词”。
+- 音乐与环境声转成可生成的描述，例如“低音量舒缓器乐，轻微室内环境声”；没有上传音频就不要求保留某条原音轨。未知声音可省略或在提示词外给出明确标注的建议。
+- 不假设小云雀具备对白、音乐、口型、首尾帧、多图绑定或指定时长等能力。若需准确声音而能力未确认，仍提供声音设计文字，并说明可后期配音；不要为普通提示词编写强制标记 NOT READY。
+- 不套用 Seedance 2.5 的时长、模式、比例、参考数组或接口限制。只有执行平台操作或用户询问参数时才核实真实界面及官方说明；不要猜控件。
 
-- Convert frame IDs and coordinates into visible actions and composition changes.
-- Use measured source ranges in analysis headers. Inside a shot prompt use relative hold → action → peak → settle; never invent cuts.
-- Describe camera by subject, start, direction, and end.
-- Bind dialogue, beats, reveals, cuts, and action peaks only when supported; with audio, include verbatim text, timing, voice style, ambience and SFX in that prompt.
-- Keep continuity to identity, count, product geometry, clothing, spatial relations, event order, and final state; reuse anchors across shots.
-- When the user specifies target product count or colorways, lock them across every relevant shot. The source video's object count is only a motion/composition cue; never duplicate a target colorway just to fill its layout. Count visible instances before returning each shot.
+## 默认交付格式
 
-### Step 4 — Return screenshot-style shot blocks
-
-For **Seedance Direct**, output the fixed `【Seedance全局控制】` line below exactly once, as the first line of the entire response, before any title, explanation, time range, or shot field. Then return one block per shot in this form (plus a final `NOT READY` note only when required):
+默认中文，按镜头给出以下结构。原片范围仅用于人工对照与剪辑定位，不是平台输入；没有可靠时间时省略或明确标为估计。
 
 ```text
-【Seedance全局控制】纯净画面，无字幕、花字、水印、标识及任何可读文字；全部台词只生成声音；参考图中的原有文字不继承、不重绘。
+【生成全局控制】纯净画面，无字幕、花字、水印、标识及任何可读文字；全部台词只作为声音；参考图中的原有文字不继承、不重绘。
 
-[原始时间段]
+生成输入：文字＋实际上传的图片（说明各图用途）；分析视频无需上传。
 
+SHOT_001
+分析视频定位：…（已确认时填写）
+建议成片时长：…（剪辑目标，不冒充平台参数）
 场景：
 构图：
 主体：
@@ -68,45 +67,32 @@ For **Seedance Direct**, output the fixed `【Seedance全局控制】` line belo
 动作：
 背景动态：
 镜头：
+声音：
 
-Seedance提示词：
-<一段可直接复制的完整提示词>
+小云雀生成提示词：
+[可直接复制的完整段落]
 ```
 
-Use this line verbatim exactly once at the start of each Seedance Direct reply, including initial packages, multi-shot packages, partial shot revisions, text-only fallbacks, and generate/edit/extend prompts. This shared control applies to every shot and prompt in that reply. Do not repeat its marker or full sentence inside shot fields, individual `Seedance提示词`, additional prompt variants, or closing notes.
+全局控制在整套提示词回复开头只出现一次。用户明确要求字幕、标识或产品文字时调整对应条款，避免自相矛盾。因为用户可能逐条复制，每条可复制提示词末尾可带简短“无字幕、无水印”的局部约束，不重复整段全局控制。
 
-This clean-frame default overrides reference fidelity for visible text: omit source captions, typography, watermarks, logos, UI text, and writing on props or products. Preserve spoken dialogue as audio only. Source text may be analyzed internally; never compile it into an instruction to render text. Only an explicit user request to change this policy permits adjusting the conflicting clause; keep `【Seedance全局控制】` first and avoid contradictory controls.
+不要在技能修改、普通解释或状态回复中强制输出提示词全局控制。用户只要纯提示词时可省略分析字段，保留独立完整的提示词；部分修订只返回受影响镜头，要求完整版本则重新整合全部镜头，不让用户自行拼补。
 
-Each `Seedance提示词` must be self-contained for its scene, relative timing, action, verbatim dialogue, voice style, ambience, music and SFX when present, plus continuity and shot-specific exclusions. The shared clean-frame control remains only at the top of the response; do not reprint or paraphrase the entire control block in each prompt. Never say “same as above” or “append later”. Keep model, duration, ratio, resolution, FPS, format, API settings, strength, seed and UI switches outside the prompt only when they are real confirmed fields.
+用户要求一次生成整条时，提供一个含顺序镜头、相对时间和明确转场的完整可复制段落，不把三个分镜说明冒充三次生成任务。用户要求分段生成时再逐镜头给独立段落。短镜头与较长对白冲突时说明剪辑目标需调整或后期配音，不强塞超时台词，也不擅自删改对白。
 
-Before returning, count the control marker in the entire response: it must appear exactly once, on the first line. If missing, prepend the fixed line; if repeated, retain only the opening instance and remove the rest. If shot fields or prompts request visible text contrary to the active policy, remove those requests. Do not move the control to a closing exclusion list.
+## 交付前检查
 
-Seedance 2.5: duration 4–30s integer. Frame mode uses adaptive ratio/no reference arrays; edit inherits source ratio/duration; extend uses adaptive ratio + extension duration. Screenshot workflow: clean each source first frame, reuse person/product anchors, then generate the next shot. Generate ≥4s and trim short shots. Use edit/extend task mode only there. With audio, paste verbatim dialogue + voice/ambience/music timing; never invent fields.
+1. 隐去分析视频与历史聊天，只看本条文字和实际上传图片，生成方能否理解人物、场景、动作、镜头和声音？不能就补写具体信息。
+2. 搜查每条提示词是否依赖“原片、源视频、参考视频、原声、原音乐、同上、上一镜头”等表达；改成明确描述，而不是只删掉这些词。
+3. 镜头首尾物体数量与拿放状态是否连贯？人和产品是否无故瞬移、增殖、变形或换款？无证据的衔接需标注推断，不能宣称原片实测。
+4. 用户指定的新数值、鞋款、人物和动作是否已在所有相关镜头同步？是否区分总增高与外跟高度？
+5. 是否把分析时间误写成平台参数，或把未上传的视频、音轨、首帧当成生成输入？
+6. 可复制段落是否完整，无“其余不变”、省略号、待追加对白等占位依赖？
 
-### Step 5 — Stop before generation
+完成提示词即完成本次提示词任务。不要因为没有复刻成片而强制继续生成或差异检查。不要承诺像素级一致、精确口型或精确切点。用户未要求实际生成时停在提示词交付；外部生成须有用户授权。
 
-**🔴 CHECKPOINT · STOP:** If the user asked for a prompt, stop after the package. Before paid generation, show the package and obtain confirmation unless submission was explicitly authorized in the current request.
+## 其他交付模式
 
-## Direct-mode fallbacks
-
-| Trigger | First action | Still unresolved |
-|---|---|---|
-| No reference media | Give text-only approximation and minimum anchors | Request anchors; never claim 1:1 |
-| Required label or schema unknown | Mark `NOT READY`; state the exact missing item | Ask once for platform or real label |
-| Source exceeds one-job limit | Propose splits at natural cuts | Stop for confirmation before multiple jobs |
-| Identity or product drifts twice | Stop adding text; add or replace a visual anchor | Use edit mode or regenerate from an approved anchor |
-| Exact cuts or lip-sync remain unstable | Preserve closest generative timing | Move exact cuts, sync, and explicitly requested captions to deterministic editing |
-
-## Other modes
-
-- **Reference Analysis:** return summary, shot/frame locks, geometry, motion, camera, lighting, color, text/audio, Master Timeline, and instructions.
-- **Reshoot Blueprint:** return camera, lighting, actor, prop, marks, timing cues, and ghost overlay.
-- **Difference Detection:** synchronize versions; return score, Error Map, Patch List, and next target. Prioritize P0–P4 and patch the smallest range.
-
-## Seedance red lines
-
-- Do not put codec data, frame IDs, coordinate or pose tables, capture settings, scores, or Error Maps into the prompt.
-- Do not invent labels, capabilities, sliders, reference weights, seeds, FPS controls, or UI switches.
-- Do not mix generate, edit, and extend in one prompt.
-- Do not promise exact text, frame cuts, lip-sync, or 1:1 output through wording alone.
-- Do not make a third text-only retry after the same consistency failure occurs twice.
+- 参考分析：用户仅要求拆解时输出证据支持的镜头、动作、画面和声音分析，不强制生成提示词或完整工程报告。
+- 实拍蓝图：按需给机位、灯光、演员动作、道具、站位和节奏。
+- 差异检查：仅在提供分析视频和复刻成片时同步比较，定位差异并优先修正具体镜头；没有成片时不编造评分。重复两次一致性失败时优先改善已允许上传的图片锚点、具体动作描述或后期剪辑，不默认转到视频编辑模式。
+- 用户明确另选平台或允许上传参考视频时，遵从该选择，核对实际输入并另写对应工作流；不把这种例外带回默认小云雀图文生成。
